@@ -20,7 +20,7 @@ if __name__ == '__main__':
     # 准备测试数据集
     test_data = torchvision.datasets.CIFAR10("./dataset", train=False,
                                              download=True, transform=transforms.ToTensor())
-    test_loader = DataLoader(test_data, batch_size=4, shuffle=True, num_workers=0, drop_last=False)
+    test_loader = DataLoader(test_data, batch_size=64, shuffle=True, num_workers=0, drop_last=False)
 
     # 测试数据集中 第1张图片的target
     img, target = test_data[0] # 是 __getitem__ 的返回值
