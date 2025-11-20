@@ -14,7 +14,7 @@ if __name__ == '__main__':
     img = Image.open(img_path)
     print(img)
 
-# 1.将PIL文件转为Tensor格式
+# 1.将 PIL 文件转为 Tensor格式
     tensor_trans = transforms.ToTensor()
     tensor_img = tensor_trans(img) #转化格式为tensor
     # print(tensor_img)
@@ -37,7 +37,6 @@ if __name__ == '__main__':
 
 # 4. 使用 Resize
     # 默认使用 (H, W) 参数进行输入，如果输入单一值，将会按照最小边匹配进行缩放
-
     resize = transforms.Resize((512, 512))
     print(tensor_cv.size())
     img_resize = resize(tensor_cv)

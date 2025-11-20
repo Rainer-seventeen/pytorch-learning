@@ -4,4 +4,9 @@
 
 dataset/
 
+# logs
 logs/
+**/runs
+
+# model
+**/*.pth

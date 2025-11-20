@@ -1,49 +1,50 @@
-# 训练 CIFAR10 数据集模型
-# 训练流程图可以参考
 import torch
+import torch.utils.tensorboard as tb
+
 from torch import nn
+from torch.nn import Conv2d, MaxPool2d, Flatten, Linear
 
 
-class Model(nn.Module):
+class NetworkDemo(nn.Module):
+    """
+    自行搭建的网络，面向 CIFAR10 数据集
+    """    
     def __init__(self):
-        super(Model, self).__init__()
-        # self.conv1 = nn.Conv2d(in_channels=3, out_channels=32, kernel_size=5, stride=1, padding="same")
-        # self.pool1 = nn.MaxPool2d(kernel_size=2)
-        # self.conv2 = nn.Conv2d(in_channels=32, out_channels=32, kernel_size=5, stride=1, padding="same")
-        # self.pool2 = nn.MaxPool2d(kernel_size=2)
-        # self.conv3 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5, stride=1, padding="same")
-        # self.pool3 = nn.MaxPool2d(kernel_size=2)
-        # self.flatten = nn.Flatten()
-        # self.linear1 = nn.Linear(in_features=1024, out_features=64)
-        # self.linear2 = nn.Linear(in_features=64, out_features=10)
-
-        self.model1 = nn.Sequential(
-            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=5, stride=1, padding="same"),
-            nn.MaxPool2d(kernel_size=2),
-            nn.Conv2d(in_channels=32, out_channels=32, kernel_size=5, stride=1, padding="same"),
-            nn.MaxPool2d(kernel_size=2),
-            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5, stride=1, padding="same"),
-            nn.MaxPool2d(kernel_size=2),
-            nn.Flatten(),
-            nn.Linear(in_features=1024, out_features=64),
-        nn.Linear(in_features=64, out_features=10)
-        )
+        super(NetworkDemo, self).__init__()
+        self.conv1 = Conv2d(in_channels=3, out_channels=32, kernel_size=5,
+                            padding=2, stride=1)
+        self.maxpool1 = MaxPool2d(kernel_size=2)
+        self.conv2 = Conv2d(32, 32, 5, padding=2)
+        self.maxpool2 = MaxPool2d(kernel_size=2)
+        self.conv3 = Conv2d(32, 64, 5, padding=2)
+        self.maxpool3 = MaxPool2d(2)
+        # 展开数据
+        self.flatten = Flatten()
+        # 线性
+        self.linear1 = Linear(in_features=1024, out_features=64)
+        self.linear2 = Linear(in_features=64, out_features=10)
 
     def forward(self, x):
-        x = self.model1(x)
+        x = self.conv1(x)
+        x = self.maxpool1(x)
+        x = self.conv2(x)
+        x = self.maxpool2(x)
+        x = self.conv3(x)
+        x = self.maxpool3(x)
+        x = self.flatten(x)
+        x = self.linear1(x)
+        x = self.linear2(x)
+
         return x
 
+if __name__ == "__main__":
+    net = NetworkDemo()
+    print(net)
+    input = torch.ones((64, 3, 32, 32))
+    output = net(input)
+    print(output.shape)
 
-if __name__ == '__main__':
-    # 此处一般用于测试网络的输出正确性
-    model = Model()
-    # 下面是用于检测网络正确性的代码
-    input = torch.ones(64, 3, 32, 32) # 创建全是1的数据
-    output = model(input)
-    print(output.size())
-
-
-
-
-
-
+    # 使用 tb 来查看网络
+    writter = tb.SummaryWriter()
+    writter.add_graph(net, input)
+    writter.close()

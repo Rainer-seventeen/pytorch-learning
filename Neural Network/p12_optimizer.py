@@ -26,7 +26,7 @@ class Model(nn.Module):
             nn.MaxPool2d(kernel_size=2),
             nn.Flatten(),
             nn.Linear(in_features=1024, out_features=64),
-        nn.Linear(in_features=64, out_features=10)
+            nn.Linear(in_features=64, out_features=10)
         )
 
     def forward(self, x):
@@ -35,7 +35,8 @@ class Model(nn.Module):
 
 
 if __name__ == '__main__':
-    dataset = torchvision.datasets.CIFAR10(root='/root/TestPytorch/dataset', train=True, download=True, transform=transforms.ToTensor())
+    data_path = '/Users/rainer/MyFiles/Code/Learning/Pytorch/dataset/cifar-10-batches-py'
+    dataset = torchvision.datasets.CIFAR10(root=data_path, train=True, download=True, transform=transforms.ToTensor())
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=64, shuffle=True)
 
     model = Model()
